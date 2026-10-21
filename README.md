@@ -10,7 +10,7 @@ A phone-friendly housekeeping log for combustible-dust inspections in flour mill
 - Works offline once loaded; data stays on the device (localStorage + IndexedDB for photos)
 
 ## Run it
-Open `dust-log/index.html` in a browser. No build step.
+Open `index.html` in a browser. No build step.
 
 ## Notes
 - The starter areas are generic examples. Rename them to match your plant.
@@ -21,3 +21,11 @@ Open `dust-log/index.html` in a browser. No build step.
 - Installable PWA (manifest + service worker)
 - Accounts and syncing so several operators share one log
 - QR codes per area
+
+## Privacy
+- Everything stays on the device that uses it. There are no accounts, no server, no analytics, and nothing is sent anywhere. (The only outside request is for the Google Fonts typeface.)
+- Clearing the browser's site data deletes the log, so copy a backup regularly.
+- Only restore backups you made yourself.
+
+## Disclaimer
+This app is a record-keeping aid. It does not make a plant compliant with OSHA, NFPA 61, NFPA 652, or any other standard, and it doesn't replace your plant's written combustible dust program, hazard analysis, or supervisor sign-off.
