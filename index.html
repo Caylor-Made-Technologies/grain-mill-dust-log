@@ -4,8 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-</head>
-<body>
 <title>Mill Dust Log</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,11 +155,13 @@ td.wrap{min-width:160px}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--text);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:40;font-weight:600;max-width:calc(100% - 32px)}
 @media (prefers-reduced-motion:no-preference){ .bar i{transition:width .3s} }
 </style>
+</head>
+<body>
 
-<div class="app">
+<main class="app">
   <div id="banner"></div>
   <div id="view"></div>
-</div>
+</main>
 <nav class="tabs" aria-label="Sections" id="tabs"></nav>
 <div id="sheet" hidden></div>
 <div id="lightbox" hidden><img alt="Photo of the area"></div>
@@ -300,7 +300,7 @@ function todayHTML(){
   ${issues.length ? `<h2 class="sec">Open follow-ups (${issues.length})</h2><div>${issues.map(issueHTML).join('')}</div>` : ''}
   <h2 class="sec">Inspection areas</h2>
   ${rows.length ? `<div class="list">${rows.map(r => `
-    <button class="area ${r.st === 'overdue' ? 'overdue' : ''}" data-act="open-area" data-id="${r.a.id}">
+    <button class="area ${r.st === 'overdue' ? 'overdue' : ''}" data-act="open-area" data-id="${esc(r.a.id)}">
       <span class="main"><div class="name">${esc(r.a.name)}</div>
         <div class="meta">${FREQ[r.a.freq]} · ${r.le ? 'Last: ' + when(r.le.ts) + ' by ' + esc(r.le.operator) : 'Not logged yet'}</div>
         ${r.open ? `<span class="pill flag">${r.open} open follow-up${r.open > 1 ? 's' : ''}</span>` : ''}</span>
@@ -311,15 +311,15 @@ function issueHTML(e){
   return `<div class="card issue"><div class="head"><span class="title">${esc(e.area)}</span>${condPill(e.condition)}</div>
     <div class="meta">Flagged ${when(e.ts)} by ${esc(e.operator)}${e.shift ? ' · ' + esc(e.shift) + ' shift' : ''}</div>
     ${e.note ? `<p class="note">${esc(e.note)}</p>` : ''}
-    ${e.photo ? `<img class="thumb" alt="Photo of ${esc(e.area)}" data-photo="${e.photo}" data-act="lightbox">` : ''}
-    <div><button class="btn small" data-act="resolve" data-id="${e.id}">Mark resolved</button></div></div>`;
+    ${e.photo ? `<img class="thumb" alt="Photo of ${esc(e.area)}" data-photo="${esc(e.photo)}" data-act="lightbox">` : ''}
+    <div><button class="btn small" data-act="resolve" data-id="${esc(e.id)}">Mark resolved</button></div></div>`;
 }
 function entryHTML(e){
   return `<div class="card stack" style="gap:6px"><div class="head"><span class="title">${esc(e.area)}</span><span class="meta">${fmtTime(e.ts)}</span></div>
     <div class="tags">${condPill(e.condition)}${pill(e.action === 'followup' ? (e.resolved ? 'ok' : 'bad') : 'due', e.action === 'followup' && e.resolved ? 'Follow-up resolved' : ACT[e.action])}${e.method ? pill('due', METH[e.method]) : ''}</div>
     <div class="meta">${esc(e.operator)}${e.shift ? ' · ' + esc(e.shift) + ' shift' : ''}${e.resolved ? ' · resolved ' + when(e.resolved.ts) + ' by ' + esc(e.resolved.by) : ''}</div>
     ${e.note ? `<p class="note">${esc(e.note)}</p>` : ''}
-    ${e.photo ? `<img class="thumb" alt="Photo of ${esc(e.area)}" data-photo="${e.photo}" data-act="lightbox">` : ''}</div>`;
+    ${e.photo ? `<img class="thumb" alt="Photo of ${esc(e.area)}" data-photo="${esc(e.photo)}" data-act="lightbox">` : ''}</div>`;
 }
 function logHTML(){
   const list = [...state.entries].sort((a, b) => b.ts - a.ts);
@@ -380,9 +380,9 @@ function areasHTML(){
   <h2 class="sec">Inspection areas</h2>
   <div class="stack">${state.areas.map(a => `
     <div class="card area-edit">
-      <input type="text" class="nm" aria-label="Area name" data-areaname="${a.id}" value="${esc(a.name)}">
-      <select aria-label="How often for ${esc(a.name)}" data-areafreq="${a.id}">${Object.entries(FREQ).map(([k, l]) => `<option value="${k}" ${a.freq === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
-      <button class="btn small danger" data-act="remove-area" data-id="${a.id}">Remove</button>
+      <input type="text" class="nm" aria-label="Area name" data-areaname="${esc(a.id)}" value="${esc(a.name)}">
+      <select aria-label="How often for ${esc(a.name)}" data-areafreq="${esc(a.id)}">${Object.entries(FREQ).map(([k, l]) => `<option value="${k}" ${a.freq === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      <button class="btn small danger" data-act="remove-area" data-id="${esc(a.id)}">Remove</button>
     </div>`).join('')}</div>
   <h2 class="sec">Add an area</h2>
   <div class="card stack">
@@ -408,7 +408,7 @@ function openSheet(id){
   const a = state.areas.find(x => x.id === id); if (!a) return;
   sheetBlob = null;
   $('#sheet').innerHTML = `<div class="scrim" data-act="close-sheet"></div>
-  <form class="panel" id="entryForm" data-area="${a.id}" novalidate>
+  <form class="panel" id="entryForm" data-area="${esc(a.id)}" novalidate>
     <header><div><h2>${esc(a.name)}</h2>${a.hint ? `<p class="hint">${esc(a.hint)}</p>` : ''}</div><button type="button" class="x" data-act="close-sheet" aria-label="Close">✕</button></header>
     <fieldset><legend>What did you find?</legend>
       ${opt('cond', 'clean', 'Clean', 'No visible dust or debris')}
