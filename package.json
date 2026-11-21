@@ -1,0 +1,16 @@
+{
+  "name": "mill-dust-log",
+  "private": true,
+  "type": "commonjs",
+  "description": "Mill Dust Log build helpers. The app is plain files at the repo root (published as-is).",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/js/*.test.js",
+    "e2e": "node tests/e2e/smoke.cjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.3",
+    "esbuild": "0.25.10",
+    "three": "0.182.0"
+  }
+}
