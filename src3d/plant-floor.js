@@ -112,6 +112,7 @@ export function mount(canvas, { model, onTap, onLost }) {
   canvas.addEventListener('pointerup', onUp);
 
   build(model);
+  stage.warm();
   const v0 = fit(model);
   camera.position.set(v0.cam[0] * 1.25, v0.cam[1] * 1.3, v0.cam[2] * 1.2);
   stage.flyTo(v0.cam, v0.at, 1200);
@@ -119,6 +120,6 @@ export function mount(canvas, { model, onTap, onLost }) {
   return {
     update(m) { build(m); const f = fit(m); stage.flyTo(f.cam, f.at, 600); },
     dispose() { canvas.removeEventListener('pointerdown', onDown); canvas.removeEventListener('pointerup', onUp); tex.dispose(); stage.dispose(); },
-    frames: stage.frames, stats: stage.stats, workStats: stage.workStats,
+    frames: stage.frames, stats: stage.stats, workStats: stage.workStats, firstFrame: stage.firstFrame,
   };
 }

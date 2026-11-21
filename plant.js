@@ -83,7 +83,7 @@
         onLost: function () { view.dispose(); canvas.remove(); stage.dataset.live = 'false'; stage.dataset.mode = '2d:context-lost'; live = null; },
       });
       live = { view: view, stage: stage };
-      requestAnimationFrame(function () { stage.dataset.live = 'true'; });
+      view.firstFrame.then(function () { stage.dataset.live = 'true'; });
       stage.dataset.mode = '3d';
       if (location.search.indexOf('debug3d') >= 0) window.__scene3d = view;
     }).catch(function () { stage.dataset.mode = '2d:load-failed'; });
